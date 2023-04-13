@@ -21,6 +21,8 @@ const background = new Sprite(level1);
 
 const interactable = new Interactable(131, 163);
 
+const date = new UI("April 22, 2023", 247, 38, "16px Helvetica", "green");
+
 let lastTime = 0;
 // animation loop
 
@@ -38,6 +40,7 @@ function animate(timeStamp) {
   player.update();
   player.handleClick(mouse);
   interactable.draw(c);
+  date.draw();
 
   requestAnimationFrame(animate);
 }
