@@ -4,19 +4,22 @@ const c = canvas.getContext("2d");
 canvas.width = 375;
 canvas.height = 667;
 
-const keys = {
-  w: {
-    pressed: false,
-  },
-  s: {
-    pressed: false,
-  },
-};
-
 const mouse = {
   clicked: false,
   y: 0,
 };
+
+let level1 = {
+  position: {
+    x: 0,
+    y: 0,
+  },
+  imageSrc: "./assets/home.png",
+};
+
+const background = new Sprite(level1);
+
+const interactable = new Interactable(131, 163);
 
 let lastTime = 0;
 // animation loop
@@ -27,13 +30,14 @@ function animate(timeStamp) {
   const deltaTime = timeStamp - lastTime;
   lastTime = timeStamp;
 
-  c.fillStyle = "white";
-  c.fillRect(0, 0, canvas.width, canvas.height);
+  // c.fillStyle = "white";
+  // c.fillRect(0, 0, canvas.width, canvas.height);
+  background.draw();
 
   player.draw();
   player.update();
-  player.handleInput(keys);
   player.handleClick(mouse);
+  interactable.draw(c);
 
   requestAnimationFrame(animate);
 }

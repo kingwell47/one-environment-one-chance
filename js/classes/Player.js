@@ -1,19 +1,19 @@
 class Player {
   constructor() {
     this.position = {
-      x: 100,
-      y: 100,
+      x: 50,
+      y: 50,
     };
     this.velocity = {
       x: 0,
       y: 0,
     };
-    this.width = 100;
+    this.width = 50;
     this.height = 100;
     this.sides = {
       bottom: this.position.y + this.height,
     };
-    this.speed = 3;
+    this.speed = 1;
   }
 
   draw() {
@@ -22,8 +22,6 @@ class Player {
   }
 
   update() {
-    this.position.y += this.velocity.y;
-
     if (this.targetY !== undefined) {
       const distance = this.targetY - this.position.y;
       if (Math.abs(distance) <= this.speed) {
@@ -31,34 +29,28 @@ class Player {
         this.velocity.y = 0;
         this.targetY = undefined;
       } else {
-        this.position.y += this.velocity.y;
+        // Restrict position within canvas bounds
+        this.position.y = Math.min(
+          Math.max(this.position.y + this.velocity.y, 30),
+          canvas.height - this.height - 30
+        );
       }
-    }
-  }
-
-  handleInput(keys) {
-    if (this.preventInput) return;
-    this.velocity.y = 0;
-    if (keys.w.pressed) {
-      this.velocity.y = -this.speed;
-      this.lastDirection = "up";
-    } else if (keys.s.pressed) {
-      this.velocity.y = this.speed;
-      this.lastDirection = "down";
-    } else {
-      // if (this.lastDirection === "left") this.switchSprite("idleLeft");
-      // else this.switchSprite("idleRight");
     }
   }
 
   handleClick(mouse) {
     if (mouse.clicked && !this.velocity.y) {
+      // Only update velocity if it hasn't been set by handleInput
       const targetY = mouse.y - this.height / 2;
-      const distance = targetY - this.position.y;
+      // Restrict targetY within canvas bounds
+      this.targetY = Math.min(
+        Math.max(targetY, 30),
+        canvas.height - this.height - 30
+      );
+      const distance = this.targetY - this.position.y;
       const direction = Math.sign(distance);
       const speed = this.speed * direction;
       this.velocity.y = speed;
-      this.targetY = targetY;
     }
     // if (this.position.y > mouse.y && mouse.clicked) {
     //   if (this.position.y - mouse.y <= this.speed) {
